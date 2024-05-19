@@ -41,6 +41,8 @@ function decodeHtml(html) {
 }
 
 function highlight(comment, link, page) {
-  console.log(comment)
+  console.log(comment);
+  document.body.innerHTML = page.replace(new RegExp(comment, "gi"), (match) => `<mark>${match}</mark>`);
+
 }
   
