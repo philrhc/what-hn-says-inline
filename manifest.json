@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "What Hacker News Says",
+  "name": "What Hacker News Says (Inline)",
   "version": "0.2.0",
-  "description": "Easily find Hacker News threads about the page you're currently browsing.",
-  "homepage_url": "https://github.com/pinoceniccola/what-hn-says-webext",
+  "description": "Easily find Hacker News threads about the page you're currently browsing, and view comments inline",
+  "homepage_url": "https://github.com/philrhc/what-hn-says-inline",
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",
@@ -25,7 +25,7 @@
       "48": "assets/icon-48.png"
     },
     "default_title": "Click to find what HN says",
-    "default_popup": "popup.html"
+    "default_popup": "popup/finder.html"
   }
 
 }

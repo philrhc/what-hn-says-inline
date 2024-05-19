@@ -5,6 +5,9 @@ const utils = {};
 
 const BLACKLISTED_PARAMS = ['utm_','clid'];
 
+chrome.tabs.executeScript({file: "/content_scripts/inline.js"})
+
+
 utils.getId = function(id){
     return document.getElementById(id);
 }
@@ -53,8 +56,6 @@ utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
   return time;
 }
 
-
-
 async function askAlgolia(url) {
   // handle special case of www/no-www versions
   // here because it helps find more results but it's not strictly url canonicalization,
@@ -66,7 +67,6 @@ async function askAlgolia(url) {
   let data = await res.json();
   return data;
 }
-
 
 function cleanUpParameters(url) {
   const urlObj = new URL(url);
@@ -105,8 +105,6 @@ function cleanUrl(url) {
   return url;
 }
 
-
-
 utils.getId('version-label').textContent = "Ver. " + manifest.version;
 
 utils.getId('about-link').addEventListener('click', (e) => {
@@ -116,16 +114,16 @@ utils.getId('about-link').addEventListener('click', (e) => {
     });
 });
 
-
-
 const $content = utils.getId('content');
+let _thisTab = null;
 let _thisUrl = false;
 let _thisTitle = false;
 let _cleanUrl = false;
 
 chrome.tabs.query({active:true,currentWindow:true}, (tabs) => {
-  _thisUrl = tabs[0].url;
-  _thisTitle = tabs[0].title;
+  _thisTab = tabs[0];
+  _thisUrl = _thisTab.url;
+  _thisTitle = _thisTab.title;
   //_thisFavicon = tabs[0].favIconUrl;
   if ( new RegExp('^https?://.+$').test(_thisUrl) ) {
 
@@ -141,8 +139,6 @@ chrome.tabs.query({active:true,currentWindow:true}, (tabs) => {
     render(false);
   }
 });
-
-
 
 function render(data) {
   while ($content.firstChild) {
@@ -184,6 +180,12 @@ function render(data) {
       _node += `<li class="py1 px2"><button class="btn btn-small red h6 px0 weight-400" data-link="https://hn.algolia.com/?query=${encodeURIComponent(data.query)}">See all ${hits} stories on Algolia</button></li>`;
     }
 
+    getQuoteComments(data).then((comments) => {
+      chrome.tabs.sendMessage(_thisTab.id, {
+        command: "insertComments",
+        data: comments
+      });
+    })
   }
 
   _node = utils.stringToDom(_node);
@@ -198,4 +200,39 @@ function render(data) {
     })
   );
 
+}
+
+async function getQuoteComments(stories) {
+  let quotedComments = [];
+  for (let i = 0; i < stories.hits.length; i++) {
+    let submissionId = stories.hits[i].story_id;
+    console.log("Getting comments on submissionId: " + submissionId);
+    let commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&hitsPerPage=30`);
+    let comments = await commentsResponse.json();
+    console.log(comments);
+
+    let pagesOfComments = comments.nbPages;
+    let currentPage = 1;
+    while (currentPage < pagesOfComments) {
+      for (j = 0; j < comments.hits.length; j++) {
+        if (searchCommentForQuoteSymbol(comments.hits[j]) && isTopLevelComment(comments.hits[j])) {
+            quotedComments.push(comments.hits[j]);
+            console.log(comments.hits[j].comment_text);
+        }
+      }
+      if (pagesOfComments > 1) {
+        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${++currentPage}&hitsPerPage=30`);
+        comments = await commentsResponse.json();
+      }
+    }
+  }
+  return quotedComments;
+}
+
+function isTopLevelComment(comment) {
+  return comment.parent_id == comment.story_id;
+}
+
+function searchCommentForQuoteSymbol(comment) {
+  return comment.comment_text.startsWith("&gt;");
 }
