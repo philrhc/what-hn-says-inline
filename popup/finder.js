@@ -1,8 +1,5 @@
-
 const manifest = chrome.runtime.getManifest();
-
 const utils = {};
-
 const BLACKLISTED_PARAMS = ['utm_','clid'];
 
 utils.getId = function(id){
@@ -53,6 +50,15 @@ utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
   return time;
 }
 
+utils.getId('version-label').textContent = "Ver. " + manifest.version;
+
+utils.getId('about-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    chrome.tabs.create({
+      url: manifest.homepage_url
+    });
+});
+
 async function askAlgolia(url) {
   // handle special case of www/no-www versions
   // here because it helps find more results but it's not strictly url canonicalization,
@@ -102,15 +108,6 @@ function cleanUrl(url) {
   return url;
 }
 
-utils.getId('version-label').textContent = "Ver. " + manifest.version;
-
-utils.getId('about-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    chrome.tabs.create({
-      url: manifest.homepage_url
-    });
-});
-
 const $content = utils.getId('content');
 let _thisTab = null;
 let _thisUrl = false;
@@ -133,7 +130,6 @@ chrome.tabs.query({active:true,currentWindow:true}, (tabs) => {
       target: { tabId : _thisTab.id },
       files: [ "./content_scripts/inline-comments-style.css" ],
     }).then(() => console.log("css injected"));
-
 
     _cleanUrl = cleanUrl(_thisUrl);
 
@@ -215,7 +211,7 @@ async function getQuoteComments(stories) {
   for (let i = 0; i < stories.hits.length; i++) {
     let submissionId = stories.hits[i].story_id;
     console.log("Getting comments on submissionId: " + submissionId);
-    let commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&hitsPerPage=30`);
+    let commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&hitsPerPage=60`);
     let comments = await commentsResponse.json();
     let pagesOfComments = comments.nbPages;
     let currentPage = 0;
@@ -228,7 +224,7 @@ async function getQuoteComments(stories) {
         }
       }
       if (pagesOfComments > 1) {
-        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${++currentPage}&hitsPerPage=30`);
+        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${++currentPage}&hitsPerPage=60`);
         comments = await commentsResponse.json();
       }
     } while (currentPage < pagesOfComments)

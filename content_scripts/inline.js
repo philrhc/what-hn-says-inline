@@ -13,10 +13,13 @@
 
       console.log(inlineComments);
       for (var i = 0; i < inlineComments.length; i++) {
-        let comment = inlineComments[i].comment_text;
-        let link = linkToComment(inlineComments[i].objectID)
-        let quote = findQuote(comment);
-        highlight(quote, link);
+        let comment = inlineComments[i];
+        let author = comment.author;
+        let text = comment.comment_text;
+        let link = linkToComment(comment.objectID)
+        let quote = findQuote(text);
+        let commentOnQuote = findComment(text);
+        highlight(quote, author, commentOnQuote, link);
       }
     }
 
@@ -41,13 +44,30 @@ function findQuote(comment) {
   return trimmed;
 }
 
+function findComment(comment) {
+  let split = comment.split("<p>").slice(1);
+  let recombined = recombineComment(split);
+  let decoded = decodeHtml(recombined);
+  let quotedAgainRemoved = decoded.replace('"', "");
+  let trimmed = quotedAgainRemoved.trim();
+  return trimmed;
+}
+
+function recombineComment(splitComment) {
+  let comment = "";
+  for (var i = 0; i < splitComment.length; i++) {
+    comment += splitComment[i] + '<br /><br />';
+  }
+  return comment;
+}
+
 function decodeHtml(html) {
   var txt = document.createElement("textarea");
   txt.innerHTML = html;
   return txt.value;
 }
 
-function highlight(quote, link) {
+function highlight(quote, author, comment, link) {
   console.log(quote);
 
   var xpath = `//p[contains(text(),'${quote}')]`;
@@ -57,12 +77,15 @@ function highlight(quote, link) {
     <div class="phil-highlight">
        ${quote}
        <div class="phil-extension">
+          <div class="phil-extension-header">
+            <a href="https://news.ycombinator.com/user?id=${author}">${author}</a>
+          </div>
           <div class="phil-comment">
-            <p>Seriously, in which reality-distortion bubble does Prabhakar Raghavan live?</p>
+            <p>${comment}</p>
           </div>
        </div>
      </div>
-  `
+  `;
 
   matchingElement.innerHTML = matchingElement.innerHTML.replace(new RegExp(quote, "gi"), insert);
 }

@@ -1,44 +1,65 @@
 .phil-highlight {
-position: relative;
-background: rgba(255, 102, 0, 0.4);
-}
-
-.phil-extension {
-opacity: 0;
-font-size: 0.8em;
-transition: 0.25s opacity;
-position: absolute;
-top: 0;
-left: 105%;
-width: 20em;
-display: block;
-background: red;
-height: auto;
-background: none;
-border: 1px solid #ccc;
-background: white;
-border-radius: 0.5em;
-}
-
-.phil-extension::before {
-content: '';
-width: .8em;
-height: .8em;
-border: 1px solid #ccc;
-border-top: none;
-border-right: none;
-display: block;
-transform: rotate(45deg);
-position: absolute;
-top: 1em;
-right: 98%;
-background: white;
-}
-
-.phil-highlight:hover .phil-extension {
-opacity: 1;
-}
-
-.phil-comment {
-padding: 0 1em;
-}
+    position: relative;
+    display: inline-block;
+    background: rgba(255, 102, 0, 0.4);
+  }
+  
+  .phil-highlight:hover .phil-extension {
+    opacity: 1;
+  }
+  
+  .phil-extension {
+    opacity: 0;
+    font-size: 9pt !important;
+    font-family: Verdana, Geneva, sans-serif !important;
+    transition: 0.25s opacity;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 105%;
+    width: 20em;
+    background: red;
+    height: auto;
+    background: none;
+    border: 1px solid #ccc;
+    background: #f6f6ef;
+    z-index: 1000000000000;
+    border-top: 0.3em solid #FF6600;
+  }
+  
+  .phil-extension::before {
+    content: '';
+    width: .8em;
+    height: .8em;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-right: none;
+    display: block;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 1em;
+    right: 98%;
+    background: #f6f6ef;
+  }
+  
+  .phil-extension-header {
+    color: #828282 !important;
+    font-size: 8pt  !important;
+    text-decoration: none !important;
+    margin: 1em;
+    font-family: Verdana, Geneva, sans-serif !important;
+  }
+  
+  .phil-extension-header a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  
+  .phil-extension-header a:hover {
+    text-decoration: underline !important;
+  }
+  
+  .phil-comment {
+    margin: 0 1em 1em !important; 
+    font-family: Verdana, Geneva, sans-serif !important;
+  }
