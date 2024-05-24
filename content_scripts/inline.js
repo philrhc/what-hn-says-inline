@@ -3,15 +3,20 @@
       return;
     }
     window.hasRun = true;
+    // let hasHighlighted = false;    
     
     async function insertComments(inlineComments) {
+      // if (hasHighlighted) {
+      //   return;
+      // }
+      // hasHighlighted = true;
+
       console.log(inlineComments);
-      const page = document.body.innerHTML;
       for (var i = 0; i < inlineComments.length; i++) {
         let comment = inlineComments[i].comment_text;
         let link = linkToComment(inlineComments[i].objectID)
         let quote = findQuote(comment);
-        highlight(quote, link, page);
+        highlight(quote, link);
       }
     }
 
@@ -27,11 +32,13 @@ function linkToComment(commentId) {
 }
 
 function findQuote(comment) {
-  let decoded = decodeHtml(comment)
-  let indentRemoved = decoded.replace(">", "");
-  let trimmed = indentRemoved.trim();
-  let split = trimmed.split("<p>")[0];
-  return split
+  let split = comment.split("<p>")[0];
+  let indentRemoved = split.replace("&gt;", "");
+  let quotesRemoved = indentRemoved.replace("&quot;", "");
+  let decoded = decodeHtml(quotesRemoved)
+  let quotedAgainRemoved = decoded.replace('"', "");
+  let trimmed = quotedAgainRemoved.trim();
+  return trimmed;
 }
 
 function decodeHtml(html) {
@@ -40,9 +47,23 @@ function decodeHtml(html) {
   return txt.value;
 }
 
-function highlight(comment, link, page) {
-  console.log(comment);
-  document.body.innerHTML = page.replace(new RegExp(comment, "gi"), (match) => `<mark>${match}</mark>`);
+function highlight(quote, link) {
+  console.log(quote);
 
+  var xpath = `//p[contains(text(),'${quote}')]`;
+  var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+  let insert = `
+    <div class="phil-highlight">
+       ${quote}
+       <div class="phil-extension">
+          <div class="phil-comment">
+            <p>Seriously, in which reality-distortion bubble does Prabhakar Raghavan live?</p>
+          </div>
+       </div>
+     </div>
+  `
+
+  matchingElement.innerHTML = matchingElement.innerHTML.replace(new RegExp(quote, "gi"), insert);
 }
   

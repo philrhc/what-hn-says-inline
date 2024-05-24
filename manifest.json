@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "What Hacker News Says (Inline)",
   "version": "0.2.0",
   "description": "Easily find Hacker News threads about the page you're currently browsing, and view comments inline",
@@ -12,20 +12,10 @@
     "128": "assets/icon-128.png",
     "256": "assets/icon-256.png"
   },
-
-  "permissions": [
-    "activeTab"
-  ],
-
-  "browser_action": {
-    "browser_style": false,
-    "default_icon": {
-      "16": "assets/icon-16.png",
-      "32": "assets/icon-32.png",
-      "48": "assets/icon-48.png"
-    },
-    "default_title": "Click to find what HN says",
+  "action": {
     "default_popup": "popup/finder.html"
-  }
-
+  },
+  "permissions": [
+    "activeTab", "scripting"
+  ]
 }

@@ -5,9 +5,6 @@ const utils = {};
 
 const BLACKLISTED_PARAMS = ['utm_','clid'];
 
-chrome.tabs.executeScript({file: "/content_scripts/inline.js"})
-
-
 utils.getId = function(id){
     return document.getElementById(id);
 }
@@ -124,8 +121,19 @@ chrome.tabs.query({active:true,currentWindow:true}, (tabs) => {
   _thisTab = tabs[0];
   _thisUrl = _thisTab.url;
   _thisTitle = _thisTab.title;
-  //_thisFavicon = tabs[0].favIconUrl;
   if ( new RegExp('^https?://.+$').test(_thisUrl) ) {
+
+    chrome.scripting.executeScript({
+      target : { tabId : _thisTab.id },
+      files : [ "./content_scripts/inline.js" ],
+    })
+    .then(() => console.log("script injected"));
+
+    chrome.scripting.insertCSS({
+      target: { tabId : _thisTab.id },
+      files: [ "./content_scripts/inline-comments-style.css" ],
+    }).then(() => console.log("css injected"));
+
 
     _cleanUrl = cleanUrl(_thisUrl);
 
@@ -209,11 +217,10 @@ async function getQuoteComments(stories) {
     console.log("Getting comments on submissionId: " + submissionId);
     let commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&hitsPerPage=30`);
     let comments = await commentsResponse.json();
-    console.log(comments);
-
     let pagesOfComments = comments.nbPages;
-    let currentPage = 1;
-    while (currentPage < pagesOfComments) {
+    let currentPage = 0;
+    do {
+      console.log(comments);
       for (j = 0; j < comments.hits.length; j++) {
         if (searchCommentForQuoteSymbol(comments.hits[j]) && isTopLevelComment(comments.hits[j])) {
             quotedComments.push(comments.hits[j]);
@@ -224,7 +231,7 @@ async function getQuoteComments(stories) {
         commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${++currentPage}&hitsPerPage=30`);
         comments = await commentsResponse.json();
       }
-    }
+    } while (currentPage < pagesOfComments)
   }
   return quotedComments;
 }
