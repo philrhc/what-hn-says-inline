@@ -223,8 +223,9 @@ async function getQuoteComments(stories) {
             console.log(comments.hits[j].comment_text);
         }
       }
+      currentPage++;
       if (pagesOfComments > 1) {
-        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${++currentPage}&hitsPerPage=60`);
+        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${currentPage}&hitsPerPage=60`);
         comments = await commentsResponse.json();
       }
     } while (currentPage < pagesOfComments)
