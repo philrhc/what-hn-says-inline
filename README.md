@@ -1,8 +1,8 @@
-![What Hacker News says](assets/icon@256.png)
-# What Hacker News says
+![Inline Hacker News Comments](assets/icon@256.png)
+# Inline Hacker News Comments
 Web Extension: View Hacker News quotes inline
 
-![Screenshot](assets/screenshot.png)
+![Screenshot](assets/inlinescreenshot.png)
 
 ## About
 Extends pinoceniccola's dead-simple yet very useful web extension that looks for threads on popular social news aggregator [Hacker News](https://news.ycombinator.com/news) via [HN Search API powered by Algolia](https://hn.algolia.com/api). 
