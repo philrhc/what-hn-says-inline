@@ -1,21 +1,22 @@
 {
   "manifest_version": 3,
   "name": "Inline Hacker News Comments",
-  "version": "0.2.0",
-  "description": "view Hacker News comments inline",
+  "version": "0.1.0",
+  "description": "View Hacker News comments inline",
   "homepage_url": "https://github.com/philrhc/what-hn-says-inline",
   "icons": {
-    "16": "assets/icon-16.png",
-    "32": "assets/icon-32.png",
-    "48": "assets/icon-48.png",
-    "96": "assets/icon-96.png",
-    "128": "assets/icon-128.png",
-    "256": "assets/icon-256.png"
+    "16": "assets/icon@16.png",
+    "32": "assets/icon@32.png",
+    "48": "assets/icon@48.png",
+    "96": "assets/icon@96.png",
+    "128": "assets/icon@128.png",
+    "256": "assets/icon@256.png"
   },
   "action": {
     "default_popup": "popup/finder.html"
   },
   "permissions": [
-    "activeTab", "scripting"
+    "activeTab", 
+    "scripting"
   ]
 }

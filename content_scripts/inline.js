@@ -3,13 +3,13 @@
       return;
     }
     window.hasRun = true;
-    // let hasHighlighted = false;    
+    let hasHighlighted = false;    
     
     async function insertComments(inlineComments) {
-      // if (hasHighlighted) {
-      //   return;
-      // }
-      // hasHighlighted = true;
+      if (hasHighlighted) {
+        return;
+      }
+      hasHighlighted = true;
 
       console.log(inlineComments);
       for (var i = 0; i < inlineComments.length; i++) {
