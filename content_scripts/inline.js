@@ -137,23 +137,6 @@ function highlight(quote, author, comment, timeSinceText, link) {
   highlightDiv.appendChild(quotedTextNode);
   highlightDiv.appendChild(extensionDiv);
   matchingElement.replaceChildren(textBefore, highlightDiv, textAfter);
-  
-/*   let insert = `
-    <div class="phil-highlight">
-       ${quote}
-       <div class="phil-extension">
-          <div class="phil-extension-header">
-            <a href=>${author}</a>
-            <a href="${link}">${timeSinceText}</a>
-          </div>
-          <div class="phil-comment">
-            <p>${comment}</p>
-          </div>
-       </div>
-     </div>
-  `;
-
-  matchingElement.innerHTML = matchingElement.innerHTML.replace(new RegExp(quote, "gi"), insert); */
 }
 
 function divWithClassName(className) {
