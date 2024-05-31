@@ -113,13 +113,37 @@ function highlight(quote, author, comment, timeSinceText, link) {
 
   var xpath = `//p[contains(text(),'${quote}')]`;
   var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-
-  let insert = `
+  let allText = matchingElement.textContent;
+  let textBefore = allText.split(quote)[0];
+  let textAfter = allText.split(quote)[1];
+  
+  const highlightDiv = divWithClassName("phil-highlight");
+  const quotedTextNode = document.createTextNode(quote);
+  const extensionDiv = divWithClassName("phil-extension");
+  const extensionHeaderDiv = divWithClassName("phil-extension-header");
+  const authorA = document.createElement("a");
+  authorA.href = `https://news.ycombinator.com/user?id=${author}`
+  authorA.innerText = author;
+  const commentLinkA = document.createElement("a");
+  author.href = link;
+  author.innerText = timeSinceText;
+  extensionHeaderDiv.appendChild(authorA);
+  extensionHeaderDiv.appendChild(commentLinkA);
+  const commentDiv = divWithClassName("phil-comment")
+  const commentP = document.createTextNode(comment);
+  commentDiv.appendChild(commentP);
+  extensionDiv.appendChild(extensionHeaderDiv);
+  extensionDiv.appendChild(commentDiv);
+  highlightDiv.appendChild(quotedTextNode);
+  highlightDiv.appendChild(extensionDiv);
+  matchingElement.replaceChildren(textBefore, highlightDiv, textAfter);
+  
+/*   let insert = `
     <div class="phil-highlight">
        ${quote}
        <div class="phil-extension">
           <div class="phil-extension-header">
-            <a href="https://news.ycombinator.com/user?id=${author}">${author}</a>
+            <a href=>${author}</a>
             <a href="${link}">${timeSinceText}</a>
           </div>
           <div class="phil-comment">
@@ -129,6 +153,12 @@ function highlight(quote, author, comment, timeSinceText, link) {
      </div>
   `;
 
-  matchingElement.innerHTML = matchingElement.innerHTML.replace(new RegExp(quote, "gi"), insert);
+  matchingElement.innerHTML = matchingElement.innerHTML.replace(new RegExp(quote, "gi"), insert); */
+}
+
+function divWithClassName(className) {
+  const div = document.createElement("div")
+  div.className = className;
+  return div
 }
   
