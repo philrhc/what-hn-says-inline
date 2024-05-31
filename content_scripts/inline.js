@@ -97,7 +97,7 @@ function findComment(comment) {
 function recombineComment(splitComment) {
   let comment = "";
   for (var i = 0; i < splitComment.length; i++) {
-    comment += splitComment[i] + '<br /><br />';
+    comment += splitComment[i] + '<br />';
   }
   return comment;
 }
@@ -130,14 +130,29 @@ function highlight(quote, author, comment, timeSinceText, link) {
   extensionHeaderDiv.appendChild(authorA);
   extensionHeaderDiv.appendChild(commentLinkA);
   const commentDiv = divWithClassName("phil-comment")
-  const commentP = document.createTextNode(comment);
-  commentDiv.appendChild(commentP);
+  addText(commentDiv, comment);
+  // const commentP = document.createTextNode(comment);
+  // commentDiv.appendChild(commentP);
   extensionDiv.appendChild(extensionHeaderDiv);
   extensionDiv.appendChild(commentDiv);
   highlightDiv.appendChild(quotedTextNode);
   highlightDiv.appendChild(extensionDiv);
   matchingElement.replaceChildren(textBefore, highlightDiv, textAfter);
 }
+
+function addText(node,text){     
+  var t=text.split(/\s*<br ?\/?>\s*/i),
+      i;
+  if(t[0].length>0){         
+    node.appendChild(document.createTextNode(t[0]));
+  }
+  for(i=1;i<t.length;i++){
+     node.appendChild(document.createElement('BR'));
+     if(t[i].length>0){
+       node.appendChild(document.createTextNode(t[i]));
+     }
+  } 
+}   
 
 function divWithClassName(className) {
   const div = document.createElement("div")
