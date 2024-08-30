@@ -117,10 +117,10 @@ function highlight(quote, author, comment, timeSinceText, link) {
   let textBefore = allText.split(quote)[0];
   let textAfter = allText.split(quote)[1];
   
-  const highlightDiv = divWithClassName("phil-highlight");
+  const highlightDiv = divWithClassName("hn-inline-highlight");
   const quotedTextNode = document.createTextNode(quote);
-  const extensionDiv = divWithClassName("phil-extension");
-  const extensionHeaderDiv = divWithClassName("phil-extension-header");
+  const extensionDiv = divWithClassName("hn-inline-extension");
+  const extensionHeaderDiv = divWithClassName("hn-inline-extension-header");
   const authorA = document.createElement("a");
   authorA.href = `https://news.ycombinator.com/user?id=${author}`
   authorA.innerText = author;
@@ -129,7 +129,7 @@ function highlight(quote, author, comment, timeSinceText, link) {
   author.innerText = timeSinceText;
   extensionHeaderDiv.appendChild(authorA);
   extensionHeaderDiv.appendChild(commentLinkA);
-  const commentDiv = divWithClassName("phil-comment")
+  const commentDiv = divWithClassName("hn-inline-comment")
   addText(commentDiv, comment);
   extensionDiv.appendChild(extensionHeaderDiv);
   extensionDiv.appendChild(commentDiv);
