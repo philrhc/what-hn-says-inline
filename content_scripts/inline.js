@@ -117,6 +117,7 @@ function highlight(quote, author, comment, timeSinceText, link) {
   let textBefore = allText.split(quote)[0];
   let textAfter = allText.split(quote)[1];
   
+  const commentContainerDiv = document.createElement("div")
   const highlightDiv = divWithClassName("phil-highlight");
   const quotedTextNode = document.createTextNode(quote);
   const extensionDiv = divWithClassName("phil-extension");
@@ -131,13 +132,16 @@ function highlight(quote, author, comment, timeSinceText, link) {
   extensionHeaderDiv.appendChild(commentLinkA);
   const commentDiv = divWithClassName("phil-comment")
   addText(commentDiv, comment);
-  // const commentP = document.createTextNode(comment);
-  // commentDiv.appendChild(commentP);
   extensionDiv.appendChild(extensionHeaderDiv);
   extensionDiv.appendChild(commentDiv);
   highlightDiv.appendChild(quotedTextNode);
   highlightDiv.appendChild(extensionDiv);
-  matchingElement.replaceChildren(textBefore, highlightDiv, textAfter);
+  commentContainerDiv.appendChild(highlightDiv);
+
+  const replacementContainer = document.createElement("div");
+  replacementContainer.replaceChildren(textBefore, commentContainerDiv, textAfter);
+
+  matchingElement.replaceWith(replacementContainer);
 }
 
 function addText(node,text){     

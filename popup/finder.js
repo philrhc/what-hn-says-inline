@@ -211,10 +211,11 @@ async function getQuoteComments(stories) {
   for (let i = 0; i < stories.hits.length; i++) {
     let submissionId = stories.hits[i].story_id;
     console.log("Getting comments on submissionId: " + submissionId);
-    let commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&hitsPerPage=60`);
+    let commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&hitsPerPage=200`);
     let comments = await commentsResponse.json();
     let pagesOfComments = comments.nbPages;
     let currentPage = 0;
+    console.log("Received number of pages: " + pagesOfComments);
     do {
       console.log(comments);
       for (j = 0; j < comments.hits.length; j++) {
@@ -225,7 +226,7 @@ async function getQuoteComments(stories) {
       }
       currentPage++;
       if (pagesOfComments > 1) {
-        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${currentPage}&hitsPerPage=60`);
+        commentsResponse = await fetch(`https://hn.algolia.com/api/v1/search?tags=comment,story_${submissionId}&page=${currentPage}&hitsPerPage=200`);
         comments = await commentsResponse.json();
       }
     } while (currentPage < pagesOfComments)

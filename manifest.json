@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Inline Hacker News Comments",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "View Hacker News comments inline",
   "homepage_url": "https://github.com/philrhc/what-hn-says-inline",
   "icons": {
