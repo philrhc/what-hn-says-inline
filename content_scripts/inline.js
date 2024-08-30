@@ -113,6 +113,9 @@ function highlight(quote, author, comment, timeSinceText, link) {
 
   var xpath = `//p[contains(text(),'${quote}')]`;
   var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  if (matchingElement == null) {
+    return;
+  }
   let allText = matchingElement.textContent;
   let textBefore = allText.split(quote)[0];
   let textAfter = allText.split(quote)[1];
