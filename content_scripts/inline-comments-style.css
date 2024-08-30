@@ -1,9 +1,3 @@
-.replaced-element p, div{
-  display: inline; /* Makes the div inline like a span or text */
-  margin: 0; /* Removes default margins */
-  padding: 0; /* Removes default padding */
-}
-
 .phil-highlight {
   position: relative;
   display: inline-block;
